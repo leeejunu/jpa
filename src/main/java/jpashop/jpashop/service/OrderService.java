@@ -8,6 +8,7 @@ import jpashop.jpashop.domain.item.Item;
 import jpashop.jpashop.repository.ItemRepository;
 import jpashop.jpashop.repository.MemberRepository;
 import jpashop.jpashop.repository.OrderRepository;
+import jpashop.jpashop.repository.OrderSearch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +44,7 @@ public class OrderService {
         //주문 생성
         Order order = Order.createOrder(findMember, delivery, orderItem);
 
-        //Delivery, OrderItem도 persist 해야하지만 cascade 때문에 자동으로 persist됨
+        //Delivery, OrderItem 도 persist 해야하지만 cascade 때문에 자동으로 persist 됨
         orderRepository.save(order);
         return order.getId();
     }
@@ -58,8 +59,8 @@ public class OrderService {
         order.cancel();
     }
 
-//    //검색
-//    public List<Order> findOrders(Long orderId) {
-//        orderRepository.findAll(o)
-//    }
+    //검색
+    public List<Order> findOrders(OrderSearch orderSearch) {
+        return orderRepository.findAllByString(orderSearch);
+    }
 }
