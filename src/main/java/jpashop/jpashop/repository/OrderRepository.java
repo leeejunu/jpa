@@ -71,6 +71,23 @@ public class OrderRepository {
         ).getResultList();
     }
 
+    /**
+     * distinct 기존의 sql에서는 튜플의 속성의 값들이 같아야 중복이 제거됨
+     * 하지만 jpql에서는 db에서 값을 가져와서 order의 객체의 참조 값이 같으면 중복을 걸러줌.
+     *
+     * 참고
+     * - 컬렉션 fetch join은 1개만 사용할 수 있다.
+     * - 페이징이 불가능하다.
+     */
+    public List<Order> findAllWithItem() {
+        return em.createQuery(
+                "select distinct o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d" +
+                        " join fetch o.orderItems oi" +
+                        " join fetch oi.item i", Order.class)
+                .getResultList();
+    }
 
 
     /**
